@@ -1,0 +1,235 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "admin@sodipas.sn",
+      "name": "Administrateur SODIPAS",
+      "role": "admin",
+      "phone": "+221 77 123 45 67",
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "email": "gestionnaire@sodipas.sn",
+      "name": "Marie Koné",
+      "role": "manager",
+      "phone": "+221 77 234 56 78",
+      "createdAt": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "email": "comptable@sodipas.sn",
+      "name": "Jean Kouassi",
+      "role": "accountant",
+      "phone": "+221 77 345 67 89",
+      "createdAt": "2024-02-01T00:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "email": "hangar1@sodipas.sn",
+      "name": "Ibrahim Bamba",
+      "role": "warehouse",
+      "phone": "+221 77 456 78 90",
+      "createdAt": "2024-02-15T00:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "email": "demo@sodipas.sn",
+      "name": "Utilisateur Demo",
+      "role": "viewer",
+      "phone": "+221 77 567 89 01",
+      "createdAt": "2024-03-01T00:00:00.000Z"
+    }
+  ],
+  "otpCodes": [],
+  "sessions": [
+    {
+      "token": "smTYTG2OhpY2Oxn0fHrJ5Osv9ASEXeTLxTp5XVyKHjmhXr4WhkHb9dkKSWu1knsi",
+      "userId": 1,
+      "email": "admin@sodipas.sn",
+      "createdAt": "2026-02-01T10:58:35.284Z",
+      "expiresAt": "2026-02-02T10:58:35.284Z"
+    },
+    {
+      "token": "mMilDKE22R5Em4vYqrt3yfopiaSs7wENLrYXkRihOYG0oHRqZn6cyCo2VZCchIRD",
+      "userId": 1,
+      "email": "admin@sodipas.sn",
+      "createdAt": "2026-02-01T11:28:10.493Z",
+      "expiresAt": "2026-02-02T11:28:10.493Z"
+    },
+    {
+      "token": "nvimOz5FrAuyjW7clHLvJBFabMSMVHimfh28kNwbYicLnXJncReT9WGEV948Xjgf",
+      "userId": 1,
+      "email": "admin@sodipas.sn",
+      "createdAt": "2026-02-01T11:36:51.861Z",
+      "expiresAt": "2026-02-02T11:36:51.861Z"
+    },
+    {
+      "token": "eGZq0atiCcpM1yaQZZr7yBXtX8coItzpZil7KdkZV3CBaGjJEv24oWfegBHdn1C1",
+      "userId": 1,
+      "email": "admin@sodipas.sn",
+      "createdAt": "2026-02-01T15:37:20.253Z",
+      "expiresAt": "2026-02-02T15:37:20.253Z"
+    }
+  ],
+  "clients": [
+    {
+      "id": "1",
+      "name": "Supermarché Central",
+      "phone": "+225 07 88 12 34 56",
+      "email": "contact@supercentral.ci",
+      "address": "Cocody, Abidjan",
+      "debt": 0,
+      "totalPurchases": 12500000,
+      "status": "good",
+      "cageots": 45,
+      "lastPurchase": "2024-01-15"
+    },
+    {
+      "id": "2",
+      "name": "Restaurant Le Palmier",
+      "phone": "+225 05 67 89 01 23",
+      "email": "info@palmier.ci",
+      "address": "Plateau, Abidjan",
+      "debt": 250000,
+      "totalPurchases": 8700000,
+      "status": "warning",
+      "cageots": 22,
+      "lastPurchase": "2024-01-14"
+    },
+    {
+      "id": "3",
+      "name": "Hôtel Ivoire Palace",
+      "phone": "+225 01 23 45 67 89",
+      "email": "achats@ivoirepalace.ci",
+      "address": "Marcory, Abidjan",
+      "debt": 480000,
+      "totalPurchases": 6200000,
+      "status": "warning",
+      "cageots": 38,
+      "lastPurchase": "2024-01-13"
+    },
+    {
+      "id": "4",
+      "name": "Marché Treichville",
+      "phone": "+225 07 11 22 33 44",
+      "email": "comptoir@treichville.ci",
+      "address": "Treichville, Abidjan",
+      "debt": 0,
+      "totalPurchases": 4800000,
+      "status": "good",
+      "cageots": 15,
+      "lastPurchase": "2024-01-15"
+    },
+    {
+      "id": "5",
+      "name": "Casino Supérette",
+      "phone": "+225 05 55 66 77 88",
+      "email": "gestion@casinosup.ci",
+      "address": "Yopougon, Abidjan",
+      "debt": 850000,
+      "totalPurchases": 3900000,
+      "status": "critical",
+      "cageots": 60,
+      "lastPurchase": "2024-01-10"
+    }
+  ],
+  "trucks": [
+    {
+      "id": "1",
+      "origin": "Daloa",
+      "driver": "Kouassi Jean",
+      "phone": "+225 07 88 12 34",
+      "articles": "Bananes plantain, Mangues",
+      "value": 2500000,
+      "status": "arrived",
+      "date": "2024-01-15"
+    },
+    {
+      "id": "2",
+      "origin": "Man",
+      "driver": "Yao Michel",
+      "phone": "+225 05 67 89 01",
+      "articles": "Ananas, Papayes",
+      "value": 1800000,
+      "status": "en_route",
+      "date": "2024-01-15"
+    },
+    {
+      "id": "3",
+      "origin": "Bouaké",
+      "driver": "Koné Ibrahim",
+      "phone": "+225 01 23 45 67",
+      "articles": "Bananes douces, Oranges",
+      "value": 3200000,
+      "status": "unloaded",
+      "date": "2024-01-14"
+    },
+    {
+      "id": "4",
+      "origin": "San Pedro",
+      "driver": "Bamba Moussa",
+      "phone": "+225 07 11 22 33",
+      "articles": "Noix de coco, Avocats",
+      "value": 1500000,
+      "status": "arrived",
+      "date": "2024-01-14"
+    }
+  ],
+  "stocks": [
+    {
+      "id": "1",
+      "name": "Bananes plantain",
+      "hangar": "Hangar 1",
+      "quantity": 850,
+      "unit": "cageots",
+      "threshold": 200,
+      "value": 4250000
+    },
+    {
+      "id": "2",
+      "name": "Bananes douces",
+      "hangar": "Hangar 1",
+      "quantity": 120,
+      "unit": "cageots",
+      "threshold": 150,
+      "value": 600000
+    },
+    {
+      "id": "3",
+      "name": "Mangues",
+      "hangar": "Hangar 2",
+      "quantity": 45,
+      "unit": "cageots",
+      "threshold": 100,
+      "value": 225000
+    },
+    {
+      "id": "4",
+      "name": "Ananas",
+      "hangar": "Hangar 2",
+      "quantity": 320,
+      "unit": "cageots",
+      "threshold": 80,
+      "value": 1600000
+    },
+    {
+      "id": "5",
+      "name": "Papayes",
+      "hangar": "Hangar 3",
+      "quantity": 180,
+      "unit": "cageots",
+      "threshold": 60,
+      "value": 900000
+    },
+    {
+      "id": "6",
+      "name": "Oranges",
+      "hangar": "Hangar 3",
+      "quantity": 420,
+      "unit": "cageots",
+      "threshold": 100,
+      "value": 2100000
+    }
+  ]
+}
