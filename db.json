@@ -44,32 +44,18 @@
   "otpCodes": [],
   "sessions": [
     {
-      "token": "smTYTG2OhpY2Oxn0fHrJ5Osv9ASEXeTLxTp5XVyKHjmhXr4WhkHb9dkKSWu1knsi",
+      "token": "OZ7A53Q685F7TyC2vyzwQ8MeYH6AeCY4lJ7eY9Y9HLzEfdtciboAYIcaiRG0u7Uc",
       "userId": 1,
       "email": "admin@sodipas.sn",
-      "createdAt": "2026-02-01T10:58:35.284Z",
-      "expiresAt": "2026-02-02T10:58:35.284Z"
+      "createdAt": "2026-02-02T12:26:34.124Z",
+      "expiresAt": "2026-02-03T12:26:34.124Z"
     },
     {
-      "token": "mMilDKE22R5Em4vYqrt3yfopiaSs7wENLrYXkRihOYG0oHRqZn6cyCo2VZCchIRD",
+      "token": "3S9y8dT1TYtf0dTNkOmfKXUDN5yAA07MTkQejfsXCrvyWSzkhaaBzbaBQuQfhPTF",
       "userId": 1,
       "email": "admin@sodipas.sn",
-      "createdAt": "2026-02-01T11:28:10.493Z",
-      "expiresAt": "2026-02-02T11:28:10.493Z"
-    },
-    {
-      "token": "nvimOz5FrAuyjW7clHLvJBFabMSMVHimfh28kNwbYicLnXJncReT9WGEV948Xjgf",
-      "userId": 1,
-      "email": "admin@sodipas.sn",
-      "createdAt": "2026-02-01T11:36:51.861Z",
-      "expiresAt": "2026-02-02T11:36:51.861Z"
-    },
-    {
-      "token": "eGZq0atiCcpM1yaQZZr7yBXtX8coItzpZil7KdkZV3CBaGjJEv24oWfegBHdn1C1",
-      "userId": 1,
-      "email": "admin@sodipas.sn",
-      "createdAt": "2026-02-01T15:37:20.253Z",
-      "expiresAt": "2026-02-02T15:37:20.253Z"
+      "createdAt": "2026-02-04T00:42:53.019Z",
+      "expiresAt": "2026-02-05T00:42:53.019Z"
     }
   ],
   "clients": [
