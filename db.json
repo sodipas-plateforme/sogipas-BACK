@@ -63,6 +63,13 @@
       "email": "admin@sodipas.sn",
       "createdAt": "2026-02-04T08:14:48.032Z",
       "expiresAt": "2026-02-05T08:14:48.032Z"
+    },
+    {
+      "token": "UqXLdBIe9eWzfI8bRdWrvtGBTTrXvwGPpL0H2mRwgXLoBVYsTyQePb2DtfS68nvz",
+      "userId": 1,
+      "email": "admin@sodipas.sn",
+      "createdAt": "2026-02-06T08:43:09.202Z",
+      "expiresAt": "2026-02-07T08:43:09.202Z"
     }
   ],
   "clients": [
