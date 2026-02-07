@@ -300,5 +300,100 @@
       "threshold": 100,
       "value": 2100000
     }
+  ],
+  "managers": [
+    {
+      "id": "1",
+      "firstName": "Mamadou",
+      "lastName": "Diop",
+      "phone": "+221 77 123 45 67",
+      "email": "mamadou.diop@sodipas.sn",
+      "hangar": "Hangar 1",
+      "password": "temp1234",
+      "isActive": true,
+      "createdAt": "2024-01-15T10:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "firstName": "Aminata",
+      "lastName": "Sall",
+      "phone": "+221 76 234 56 78",
+      "email": "aminata.sall@sodipas.sn",
+      "hangar": "Hangar 2",
+      "password": "temp1234",
+      "isActive": true,
+      "createdAt": "2024-01-20T10:00:00.000Z"
+    },
+    {
+      "id": "3",
+      "firstName": "Cheikh",
+      "lastName": "Ndiaye",
+      "phone": "+221 70 345 67 89",
+      "email": "cheikh.ndiaye@sodipas.sn",
+      "hangar": "Hangar 3",
+      "password": "temp1234",
+      "isActive": true,
+      "createdAt": "2024-02-01T10:00:00.000Z"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "1",
+      "type": "manager_created",
+      "title": "Nouveau gestionnaire créé",
+      "message": "Mamadou Diop a été affecté au Hangar 1",
+      "read": true,
+      "createdAt": "2024-01-15T10:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "type": "client_created",
+      "title": "Nouveau client enregistré",
+      "message": "Moussa Diop a été ajouté au Hangar 1",
+      "read": true,
+      "createdAt": "2024-01-15T11:00:00.000Z"
+    },
+    {
+      "id": "3",
+      "type": "invoice_created",
+      "title": "Nouvelle facture créée",
+      "message": "Facture INV-2024-001 créée pour Moussa Diop",
+      "read": true,
+      "createdAt": "2024-01-15T12:00:00.000Z"
+    },
+    {
+      "id": "4",
+      "type": "payment_received",
+      "title": "Paiement reçu",
+      "message": "Paiement de 500000 F reçu de Moussa Diop",
+      "read": true,
+      "createdAt": "2024-01-16T09:00:00.000Z"
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": "1",
+      "userId": 1,
+      "userName": "Administrateur SODIPAS",
+      "action": "CREATE_MANAGER",
+      "details": "Création du gestionnaire Mamadou Diop pour Hangar 1",
+      "timestamp": "2024-01-15T10:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "userId": 2,
+      "userName": "Mamadou Diop",
+      "action": "CREATE_INVOICE",
+      "details": "Création de la facture INV-2024-001",
+      "timestamp": "2024-01-15T14:00:00.000Z"
+    },
+    {
+      "id": "3",
+      "userId": 2,
+      "userName": "Mamadou Diop",
+      "action": "CREATE_CLIENT",
+      "details": "Ajout du nouveau client Moussa Diop",
+      "timestamp": "2024-01-16T09:30:00.000Z"
+    }
   ]
 }
