@@ -14,6 +14,7 @@
       "name": "Marie Koné",
       "role": "manager",
       "phone": "+221 77 234 56 78",
+      "hangar": "Hangar 1",
       "createdAt": "2024-01-15T00:00:00.000Z"
     },
     {
@@ -30,6 +31,7 @@
       "name": "Ibrahim Bamba",
       "role": "warehouse",
       "phone": "+221 77 456 78 90",
+      "hangar": "Hangar 1",
       "createdAt": "2024-02-15T00:00:00.000Z"
     },
     {
@@ -39,44 +41,66 @@
       "role": "viewer",
       "phone": "+221 77 567 89 01",
       "createdAt": "2024-03-01T00:00:00.000Z"
+    },
+    {
+      "id": 6,
+      "email": "mamadou.diop@sodipas.sn",
+      "name": "Mamadou Diop",
+      "role": "manager",
+      "phone": "+221 77 123 45 67",
+      "hangar": "Hangar 1",
+      "createdAt": "2024-01-15T10:00:00.000Z"
+    },
+    {
+      "id": 7,
+      "email": "aminata.sall@sodipas.sn",
+      "name": "Aminata Sall",
+      "role": "manager",
+      "phone": "+221 76 234 56 78",
+      "hangar": "Hangar 2",
+      "createdAt": "2024-01-20T10:00:00.000Z"
+    },
+    {
+      "id": 8,
+      "email": "cheikh.ndiaye@sodipas.sn",
+      "name": "Cheikh Ndiaye",
+      "role": "manager",
+      "phone": "+221 70 345 67 89",
+      "hangar": "Hangar 3",
+      "createdAt": "2024-02-01T10:00:00.000Z"
+    },
+    {
+      "id": 9,
+      "email": "mariama.diallo@sodipas.sn",
+      "name": "undefined undefined",
+      "role": "cashier",
+      "phone": "+221 77 111 22 33",
+      "hangar": "Hangar 1",
+      "createdAt": "2024-02-10T10:00:00.000Z",
+      "isActive": true,
+      "updatedAt": "2026-02-11T15:31:38.557Z"
+    },
+    {
+      "id": 1770923257110,
+      "firstName": "thierno",
+      "lastName": "segnane",
+      "name": "thierno segnane",
+      "phone": "764229660",
+      "email": "thiernosegnane316@gmail.com",
+      "hangar": "Hangar 3",
+      "role": "cashier",
+      "isActive": true,
+      "createdAt": "2026-02-12T19:07:37.110Z"
     }
   ],
   "otpCodes": [],
   "sessions": [
     {
-      "token": "OZ7A53Q685F7TyC2vyzwQ8MeYH6AeCY4lJ7eY9Y9HLzEfdtciboAYIcaiRG0u7Uc",
-      "userId": 1,
-      "email": "admin@sodipas.sn",
-      "createdAt": "2026-02-02T12:26:34.124Z",
-      "expiresAt": "2026-02-03T12:26:34.124Z"
-    },
-    {
-      "token": "3S9y8dT1TYtf0dTNkOmfKXUDN5yAA07MTkQejfsXCrvyWSzkhaaBzbaBQuQfhPTF",
-      "userId": 1,
-      "email": "admin@sodipas.sn",
-      "createdAt": "2026-02-04T00:42:53.019Z",
-      "expiresAt": "2026-02-05T00:42:53.019Z"
-    },
-    {
-      "token": "qevQD13TLFikBoT8DIXm8JBVoCl7LgPpAzGdsxJMJpCXZgaZKe4NZYTdHa7SnJZX",
-      "userId": 1,
-      "email": "admin@sodipas.sn",
-      "createdAt": "2026-02-04T08:14:48.032Z",
-      "expiresAt": "2026-02-05T08:14:48.032Z"
-    },
-    {
-      "token": "r6iHQzA7AOgBiLXnvzo6zryPnTsqMLT1TecnMDlmTyykmQc6oiQHG9gnT7HZqNrR",
-      "userId": 1,
-      "email": "admin@sodipas.sn",
-      "createdAt": "2026-02-07T14:42:57.178Z",
-      "expiresAt": "2026-02-08T14:42:57.178Z"
-    },
-    {
-      "token": "EgnI5goYKYPooDeDPhaY1LPYFVN4WH3wB5M6pN5TBlY4o0QywUuufxUSOfMvNYlZ",
-      "userId": 1,
-      "email": "admin@sodipas.sn",
-      "createdAt": "2026-02-07T21:20:23.873Z",
-      "expiresAt": "2026-02-08T21:20:23.873Z"
+      "token": "zJLzbhRBdjdaXOYsk4YJxuphCoAjIE3yYyeJqOF4CG5Pjf12JQJ8gXVYU3bAoMSy",
+      "userId": 9,
+      "email": "mariama.diallo@sodipas.sn",
+      "createdAt": "2026-02-12T19:14:26.098Z",
+      "expiresAt": "2026-02-13T19:14:26.098Z"
     }
   ],
   "clients": [
@@ -301,41 +325,8 @@
       "value": 2100000
     }
   ],
-  "managers": [
-    {
-      "id": "1",
-      "firstName": "Mamadou",
-      "lastName": "Diop",
-      "phone": "+221 77 123 45 67",
-      "email": "mamadou.diop@sodipas.sn",
-      "hangar": "Hangar 1",
-      "password": "temp1234",
-      "isActive": true,
-      "createdAt": "2024-01-15T10:00:00.000Z"
-    },
-    {
-      "id": "2",
-      "firstName": "Aminata",
-      "lastName": "Sall",
-      "phone": "+221 76 234 56 78",
-      "email": "aminata.sall@sodipas.sn",
-      "hangar": "Hangar 2",
-      "password": "temp1234",
-      "isActive": true,
-      "createdAt": "2024-01-20T10:00:00.000Z"
-    },
-    {
-      "id": "3",
-      "firstName": "Cheikh",
-      "lastName": "Ndiaye",
-      "phone": "+221 70 345 67 89",
-      "email": "cheikh.ndiaye@sodipas.sn",
-      "hangar": "Hangar 3",
-      "password": "temp1234",
-      "isActive": true,
-      "createdAt": "2024-02-01T10:00:00.000Z"
-    }
-  ],
+  "managers": [],
+  "cashiers": [],
   "notifications": [
     {
       "id": "1",
@@ -368,6 +359,14 @@
       "message": "Paiement de 500000 F reçu de Moussa Diop",
       "read": true,
       "createdAt": "2024-01-16T09:00:00.000Z"
+    },
+    {
+      "id": "1770923257110",
+      "type": "user_created",
+      "title": "Nouvel utilisateur créé",
+      "message": "thierno segnane (cashier) a été créé",
+      "read": true,
+      "createdAt": "2026-02-12T19:07:37.110Z"
     }
   ],
   "auditLogs": [
@@ -394,6 +393,30 @@
       "action": "CREATE_CLIENT",
       "details": "Ajout du nouveau client Moussa Diop",
       "timestamp": "2024-01-16T09:30:00.000Z"
+    },
+    {
+      "id": "1770823898557",
+      "userId": 1,
+      "userName": "Administrateur SODIPAS",
+      "action": "UPDATE_USER",
+      "details": "Mise à jour de l'utilisateur undefined undefined",
+      "timestamp": "2026-02-11T15:31:38.557Z"
+    },
+    {
+      "id": "1770923257110",
+      "userId": 1,
+      "userName": "Administrateur SODIPAS",
+      "action": "CREATE_USER",
+      "details": "Création de l'utilisateur thierno segnane (cashier)",
+      "timestamp": "2026-02-12T19:07:37.110Z"
+    },
+    {
+      "id": "1770923266435",
+      "userId": 1,
+      "userName": "Administrateur SODIPAS",
+      "action": "DELETE_USER",
+      "details": "Suppression de l'utilisateur Babacar Sow",
+      "timestamp": "2026-02-12T19:07:46.435Z"
     }
   ]
 }

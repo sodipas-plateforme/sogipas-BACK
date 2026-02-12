@@ -37,6 +37,24 @@ app.use((req, res, next) => {
 });
 
 // ============================================
+// HELPER FUNCTIONS
+// ============================================
+
+// Notify all admin users
+const notifyAdmin = (db, type, title, message) => {
+  const notification = {
+    id: Date.now().toString(),
+    type,
+    title,
+    message,
+    read: false,
+    createdAt: new Date().toISOString()
+  };
+  db.notifications.push(notification);
+  console.log(`🔔 [ADMIN NOTIFICATION] ${title}: ${message}`);
+};
+
+// ============================================
 // AUTH ROUTES
 // ============================================
 
@@ -87,7 +105,9 @@ app.post('/auth/login', (req, res) => {
     user: {
       id: user.id,
       email: user.email,
-      role: user.role
+      name: user.name,
+      role: user.role,
+      hangar: user.hangar || null
     },
     // For demo purposes only - remove in production!
     _debug_otp: otp
@@ -160,7 +180,8 @@ app.post('/auth/verify-otp', (req, res) => {
       id: user.id,
       email: user.email,
       name: user.name,
-      role: user.role
+      role: user.role,
+      hangar: user.hangar || null
     }
   });
 });
@@ -410,6 +431,284 @@ app.delete('/managers/:id', (req, res) => {
 });
 
 // ============================================
+// USER MANAGEMENT ROUTES (Admin only)
+// ============================================
+
+// GET /users - List all users (without passwords)
+app.get('/users', (req, res) => {
+  const db = getDb();
+  // Return users without sensitive data
+  const users = db.users.map(u => {
+    const { password, ...user } = u;
+    return user;
+  });
+  res.json(users);
+});
+
+// GET /users/:id - Get user by ID
+app.get('/users/:id', (req, res) => {
+  const db = getDb();
+  const user = db.users.find(u => u.id === parseInt(req.params.id));
+  if (!user) {
+    return res.status(404).json({ error: 'Utilisateur non trouvé' });
+  }
+  const { password, ...userData } = user;
+  res.json(userData);
+});
+
+// POST /users/by-manager - Create cashier by manager (auto-assign hangar)
+app.post('/users/by-manager', (req, res) => {
+  const { managerId, firstName, lastName, phone, email } = req.body;
+  
+  if (!managerId || !firstName || !lastName || !phone || !email) {
+    return res.status(400).json({ 
+      success: false,
+      error: 'Tous les champs sont requis: ID gestionnaire, prénom, nom, téléphone, email'
+    });
+  }
+
+  const db = getDb();
+  
+  // Find the manager
+  const manager = db.users.find(u => u.id === managerId && u.role === 'manager');
+  if (!manager) {
+    return res.status(404).json({ 
+      success: false,
+      error: 'Gestionnaire non trouvé'
+    });
+  }
+  
+  // Check if email already exists
+  const existingUser = db.users.find(u => u.email.toLowerCase() === email.toLowerCase());
+  if (existingUser) {
+    return res.status(400).json({ 
+      success: false,
+      error: 'Un utilisateur avec cet email existe déjà'
+    });
+  }
+  
+  // Generate temporary password (8 characters)
+  const tempPassword = Math.random().toString(36).slice(-8);
+  
+  // Create new cashier with manager's hangar
+  const newUser = {
+    id: Date.now(),
+    firstName,
+    lastName,
+    name: `${firstName} ${lastName}`,
+    phone,
+    email,
+    hangar: manager.hangar || 'Non attribué',
+    role: 'cashier',
+    createdBy: managerId,
+    isActive: true,
+    createdAt: new Date().toISOString()
+  };
+  
+  db.users.push(newUser);
+  
+  // Add notification for manager
+  const notification = {
+    id: Date.now().toString(),
+    userId: managerId,
+    type: 'cashier_created',
+    title: 'Caissier créé',
+    message: `${firstName} ${lastName} a été créé comme caissier (Hangar: ${manager.hangar || 'Non attribué'})`,
+    read: false,
+    createdAt: new Date().toISOString()
+  };
+  db.notifications.push(notification);
+  
+  // Add audit log
+  const auditLog = {
+    id: Date.now().toString(),
+    userId: managerId,
+    userName: manager.name,
+    action: 'CREATE_CASHIER',
+    details: `Création du caissier ${firstName} ${lastName} (Hangar: ${manager.hangar || 'Non attribué'})`,
+    timestamp: new Date().toISOString()
+  };
+  db.auditLogs.push(auditLog);
+  
+  // Also notify admin
+  notifyAdmin(db, 'cashier_created', 'Nouveau caissier créé', `${firstName} ${lastName} est devenu caissier du ${manager.hangar || 'Hangar non attribué'}`);
+  
+  saveDb(db);
+  
+  // Simulate email sending
+  console.log(`\n📧 === CRÉATION DE CAISSIER ===\n`);
+  console.log(`Gestionnaire: ${manager.name}`);
+  console.log(`Nouveau caissier: ${firstName} ${lastName}`);
+  console.log(`Email: ${email}`);
+  console.log(`Hangar affecté: ${manager.hangar || 'Non attribué'}`);
+  console.log(`Mot de passe temporaire: ${tempPassword}`);
+  console.log(`=========================================\n`);
+  
+  // Return user without password
+  const { password, ...userData } = newUser;
+  res.status(201).json({
+    success: true,
+    user: userData,
+    message: `Caissier ${firstName} ${lastName} créé avec succès au hangar ${manager.hangar || 'Non attribué'}`
+  });
+});
+
+// POST /users - Create new user
+app.post('/users', (req, res) => {
+  const { firstName, lastName, phone, email, hangar, role } = req.body;
+  
+  if (!firstName || !lastName || !phone || !email || !role) {
+    return res.status(400).json({ 
+      success: false,
+      error: 'Tous les champs sont requis: prénom, nom, téléphone, email, rôle'
+    });
+  }
+
+  const db = getDb();
+  
+  // Check if email already exists
+  const existingUser = db.users.find(u => u.email.toLowerCase() === email.toLowerCase());
+  if (existingUser) {
+    return res.status(400).json({ 
+      success: false,
+      error: 'Un utilisateur avec cet email existe déjà'
+    });
+  }
+  
+  // Generate temporary password (8 characters)
+  const tempPassword = Math.random().toString(36).slice(-8);
+  
+  // Create new user
+  const newUser = {
+    id: Date.now(),
+    firstName,
+    lastName,
+    name: `${firstName} ${lastName}`,
+    phone,
+    email,
+    hangar: hangar || null,
+    role,
+    isActive: true,
+    createdAt: new Date().toISOString()
+  };
+  
+  db.users.push(newUser);
+  
+  // Add notification for admin
+  const notification = {
+    id: Date.now().toString(),
+    type: 'user_created',
+    title: 'Nouvel utilisateur créé',
+    message: `${firstName} ${lastName} (${role}) a été créé`,
+    read: false,
+    createdAt: new Date().toISOString()
+  };
+  db.notifications.push(notification);
+  
+  // Add audit log
+  const auditLog = {
+    id: Date.now().toString(),
+    userId: 1,
+    userName: 'Administrateur SODIPAS',
+    action: 'CREATE_USER',
+    details: `Création de l'utilisateur ${firstName} ${lastName} (${role})`,
+    timestamp: new Date().toISOString()
+  };
+  db.auditLogs.push(auditLog);
+  
+  saveDb(db);
+  
+  // Simulate email sending
+  console.log(`\n📧 === EMAIL DE CRÉATION DE COMPTE ===\n`);
+  console.log(`À: ${email}`);
+  console.log(`Sujet: Votre compte SODIPAS - ${role}`);
+  console.log(`\nBonjour ${firstName} ${lastName},\n`);
+  console.log(`Votre compte ${role} a été créé.\n`);
+  if (hangar) console.log(`Hangar affecté: ${hangar}`);
+  console.log(`Email: ${email}`);
+  console.log(`Mot de passe temporaire: ${tempPassword}`);
+  console.log(`\nVeuillez vous connecter et changer votre mot de passe.\n`);
+  console.log(`=========================================\n`);
+  
+  // Return user without password
+  const { password, ...userData } = newUser;
+  res.status(201).json({
+    success: true,
+    user: userData,
+    message: `Email de création envoyé à ${email}`
+  });
+});
+
+// PUT /users/:id - Update user
+app.put('/users/:id', (req, res) => {
+  const db = getDb();
+  const index = db.users.findIndex(u => u.id === parseInt(req.params.id));
+  
+  if (index === -1) {
+    return res.status(404).json({ error: 'Utilisateur non trouvé' });
+  }
+  
+  const { firstName, lastName, phone, email, hangar, role, isActive } = req.body;
+  
+  // Update user
+  db.users[index] = {
+    ...db.users[index],
+    firstName: firstName || db.users[index].firstName,
+    lastName: lastName || db.users[index].lastName,
+    name: `${firstName || db.users[index].firstName} ${lastName || db.users[index].lastName}`,
+    phone: phone || db.users[index].phone,
+    email: email || db.users[index].email,
+    hangar: hangar !== undefined ? hangar : db.users[index].hangar,
+    role: role || db.users[index].role,
+    isActive: isActive !== undefined ? isActive : db.users[index].isActive,
+    updatedAt: new Date().toISOString()
+  };
+  
+  // Add audit log
+  const auditLog = {
+    id: Date.now().toString(),
+    userId: 1,
+    userName: 'Administrateur SODIPAS',
+    action: 'UPDATE_USER',
+    details: `Mise à jour de l'utilisateur ${db.users[index].name}`,
+    timestamp: new Date().toISOString()
+  };
+  db.auditLogs.push(auditLog);
+  
+  saveDb(db);
+  
+  const { password, ...userData } = db.users[index];
+  res.json(userData);
+});
+
+// DELETE /users/:id - Delete user
+app.delete('/users/:id', (req, res) => {
+  const db = getDb();
+  const index = db.users.findIndex(u => u.id === parseInt(req.params.id));
+  
+  if (index === -1) {
+    return res.status(404).json({ error: 'Utilisateur non trouvé' });
+  }
+  
+  const deleted = db.users.splice(index, 1)[0];
+  
+  // Add audit log
+  const auditLog = {
+    id: Date.now().toString(),
+    userId: 1,
+    userName: 'Administrateur SODIPAS',
+    action: 'DELETE_USER',
+    details: `Suppression de l'utilisateur ${deleted.name}`,
+    timestamp: new Date().toISOString()
+  };
+  db.auditLogs.push(auditLog);
+  
+  saveDb(db);
+  
+  res.json({ success: true, message: 'Utilisateur supprimé' });
+});
+
+// ============================================
 // NOTIFICATIONS & AUDIT LOG ROUTES
 // ============================================
 
@@ -537,7 +836,8 @@ app.get('/auth/me', (req, res) => {
       email: user.email,
       name: user.name,
       role: user.role,
-      phone: user.phone
+      phone: user.phone,
+      hangar: user.hangar || null
     }
   });
 });
@@ -619,7 +919,286 @@ createCrudRoutes('users');
 createCrudRoutes('clients');
 createCrudRoutes('trucks');
 createCrudRoutes('stocks');
-createCrudRoutes('managers');
+
+// ============================================
+// CASHIER SPECIFIC ROUTES
+// ============================================
+
+// GET /cashier/transactions - Get transactions for a cashier's hangar
+app.get('/cashier/transactions', (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: "Non authentifié" });
+  }
+  
+  const token = authHeader.substring(7);
+  const db = getDb();
+  const session = db.sessions.find(s => s.token === token);
+  
+  if (!session) {
+    return res.status(401).json({ success: false, message: "Session invalide" });
+  }
+  
+  const user = db.users.find(u => u.id === session.userId);
+  if (!user || user.role !== 'cashier') {
+    return res.status(403).json({ success: false, message: "Accès refusé" });
+  }
+  
+  // Get transactions filtered by hangar
+  const transactions = db.transactions || [];
+  const cashierTransactions = transactions.filter(t => t.hangar === user.hangar);
+  
+  res.json(cashierTransactions);
+});
+
+// POST /cashier/transactions - Create a new transaction
+app.post('/cashier/transactions', (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: "Non authentifié" });
+  }
+  
+  const token = authHeader.substring(7);
+  const db = getDb();
+  const session = db.sessions.find(s => s.token === token);
+  
+  if (!session) {
+    return res.status(401).json({ success: false, message: "Session invalide" });
+  }
+  
+  const user = db.users.find(u => u.id === session.userId);
+  if (!user || user.role !== 'cashier') {
+    return res.status(403).json({ success: false, message: "Accès refusé" });
+  }
+  
+  const { type, clientId, clientName, amount, description, reference } = req.body;
+  
+  if (!type || !clientId) {
+    return res.status(400).json({ success: false, message: "Données incomplètes" });
+  }
+  
+  const transaction = {
+    id: `TX-${Date.now()}`,
+    cashierId: user.id,
+    cashierName: user.name,
+    type,
+    clientId,
+    clientName: clientName || '',
+    amount: amount || 0,
+    description: description || '',
+    reference: reference || '',
+    hangar: user.hangar,
+    status: 'completed',
+    createdAt: new Date().toISOString()
+  };
+  
+  if (!db.transactions) db.transactions = [];
+  db.transactions.push(transaction);
+  
+  // Add audit log
+  const auditLog = {
+    id: Date.now().toString(),
+    userId: user.id,
+    userName: user.name,
+    action: 'CREATE_TRANSACTION',
+    details: `Transaction ${type}: ${description || ''} pour ${clientName || clientId}`,
+    timestamp: new Date().toISOString()
+  };
+  db.auditLogs.push(auditLog);
+  
+  // Notify admin about the transaction
+  const typeLabels = {
+    payment: 'Paiement',
+    invoice: 'Facture',
+    cageots: 'Retour de cageots'
+  };
+  notifyAdmin(db, 'transaction', 'Nouvelle transaction', `${user.name} a effectué un(e) ${typeLabels[type] || type}: ${amount || 0} F pour ${clientName || clientId}`);
+  
+  saveDb(db);
+  
+  res.status(201).json({ success: true, transaction });
+});
+
+// GET /cashier/closure - Get today's closure status
+app.get('/cashier/closure', (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: "Non authentifié" });
+  }
+  
+  const token = authHeader.substring(7);
+  const db = getDb();
+  const session = db.sessions.find(s => s.token === token);
+  
+  if (!session) {
+    return res.status(401).json({ success: false, message: "Session invalide" });
+  }
+  
+  const user = db.users.find(u => u.id === session.userId);
+  if (!user || user.role !== 'cashier') {
+    return res.status(403).json({ success: false, message: "Accès refusé" });
+  }
+  
+  const today = new Date().toISOString().split('T')[0];
+  const closures = db.closures || [];
+  const todayClosure = closures.find(c => c.cashierId === user.id && c.date === today);
+  
+  res.json(todayClosure || { status: 'open', date: today, cashierId: user.id, hangar: user.hangar });
+});
+
+// POST /cashier/closure - Close the day
+app.post('/cashier/closure', (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: "Non authentifié" });
+  }
+  
+  const token = authHeader.substring(7);
+  const db = getDb();
+  const session = db.sessions.find(s => s.token === token);
+  
+  if (!session) {
+    return res.status(401).json({ success: false, message: "Session invalide" });
+  }
+  
+  const user = db.users.find(u => u.id === session.userId);
+  if (!user || user.role !== 'cashier') {
+    return res.status(403).json({ success: false, message: "Accès refusé" });
+  }
+  
+  const today = new Date().toISOString().split('T')[0];
+  const closures = db.closures || [];
+  const existingClosure = closures.find(c => c.cashierId === user.id && c.date === today);
+  
+  if (existingClosure && existingClosure.status === 'closed') {
+    return res.status(400).json({ success: false, message: "La journée est déjà clôturée" });
+  }
+  
+  // Calculate totals from transactions
+  const transactions = (db.transactions || []).filter(t => 
+    t.cashierId === user.id && t.createdAt.startsWith(today)
+  );
+  
+  const totalAmount = transactions
+    .filter(t => t.type === 'payment')
+    .reduce((sum, t) => sum + t.amount, 0);
+  
+  const totalTransactions = transactions.length;
+  
+  const closure = {
+    id: `CL-${today}-${user.id}`,
+    cashierId: user.id,
+    cashierName: user.name,
+    hangar: user.hangar,
+    date: today,
+    openingTime: existingClosure?.openingTime || new Date().toISOString(),
+    closingTime: new Date().toISOString(),
+    totalTransactions,
+    totalAmount,
+    status: 'closed',
+    notes: req.body.notes || '',
+    createdAt: new Date().toISOString()
+  };
+  
+  // Update or create closure
+  const closureIndex = closures.findIndex(c => c.cashierId === user.id && c.date === today);
+  if (closureIndex >= 0) {
+    closures[closureIndex] = closure;
+  } else {
+    closures.push(closure);
+  }
+  
+  db.closures = closures;
+  
+  // Add audit log
+  const auditLog = {
+    id: Date.now().toString(),
+    userId: user.id,
+    userName: user.name,
+    action: 'DAY_CLOSURE',
+    details: `Clôture de la journée - ${totalTransactions} transactions, total: ${totalAmount} F`,
+    timestamp: new Date().toISOString()
+  };
+  db.auditLogs.push(auditLog);
+  
+  // Notify admin about the closure
+  notifyAdmin(db, 'closure', 'Clôture de caisse', `${user.name} (${user.hangar}) a clôturé la journée: ${totalTransactions} transactions, total: ${totalAmount} F`);
+  
+  saveDb(db);
+  
+  res.json({ success: true, closure });
+});
+
+// GET /cashier/dashboard - Get dashboard data for cashier
+app.get('/cashier/dashboard', (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: "Non authentifié" });
+  }
+  
+  const token = authHeader.substring(7);
+  const db = getDb();
+  const session = db.sessions.find(s => s.token === token);
+  
+  if (!session) {
+    return res.status(401).json({ success: false, message: "Session invalide" });
+  }
+  
+  const user = db.users.find(u => u.id === session.userId);
+  if (!user || user.role !== 'cashier') {
+    return res.status(403).json({ success: false, message: "Accès refusé" });
+  }
+  
+  const today = new Date().toISOString().split('T')[0];
+  
+  // Get clients for this hangar
+  const clients = (db.clients || []).filter(c => c.hangar === user.hangar || true); // In production, filter by hangar
+  
+  // Get today's transactions
+  const transactions = (db.transactions || []).filter(t => 
+    t.cashierId === user.id && t.createdAt.startsWith(today)
+  );
+  
+  // Calculate stats
+  const todayRevenue = transactions
+    .filter(t => t.type === 'payment')
+    .reduce((sum, t) => sum + t.amount, 0);
+  
+  const pendingDebt = clients.reduce((sum, c) => sum + (c.debt || 0), 0);
+  const totalCageots = clients.reduce((sum, c) => sum + (c.cageots || 0), 0);
+  
+  // Check closure status
+  const closures = db.closures || [];
+  const todayClosure = closures.find(c => c.cashierId === user.id && c.date === today);
+  
+  res.json({
+    success: true,
+    data: {
+      cashier: {
+        id: user.id,
+        name: user.name,
+        hangar: user.hangar
+      },
+      stats: {
+        todayRevenue,
+        todayTransactions: transactions.length,
+        pendingDebt,
+        totalCageots
+      },
+      closure: todayClosure || { status: 'open', date: today },
+      recentTransactions: transactions.slice(-10).reverse(),
+      clients: clients.slice(0, 20)
+    }
+  });
+});
+
+// GET /clients/hangar/:hangarName - Get clients by hangar
+app.get('/clients/hangar/:hangarName', (req, res) => {
+  const db = getDb();
+  const clients = db.clients || [];
+  const hangarClients = clients.filter(c => c.hangar === req.params.hangarName || c.hangar === `Hangar ${req.params.hangarName}`);
+  res.json(hangarClients);
+});
 
 // ============================================
 // START SERVER
@@ -647,7 +1226,6 @@ app.listen(PORT, () => {
 ║   GET  /clients           - List clients                 ║
 ║   GET  /trucks            - List trucks                  ║
 ║   GET  /stocks            - List stocks                  ║
-║   GET  /managers          - List managers                ║
 ║   GET  /notifications     - List notifications           ║
 ║   GET  /audit-logs        - List audit logs              ║
 ║   GET  /hangars           - List hangars                 ║
