@@ -3,19 +3,23 @@
     {
       "id": 1,
       "email": "admin@sodipas.sn",
-      "name": "Administrateur SODIPAS",
+      "name": "Admin SODIPAS",
       "role": "admin",
       "phone": "+221 77 123 45 67",
-      "createdAt": "2024-01-01T00:00:00.000Z"
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "isActive": true,
+      "updatedAt": "2026-02-13T14:46:54.836Z"
     },
     {
       "id": 2,
       "email": "gestionnaire@sodipas.sn",
-      "name": "Marie Koné",
+      "name": "Gestionnaire Principal",
       "role": "manager",
       "phone": "+221 77 234 56 78",
       "hangar": "Hangar 1",
-      "createdAt": "2024-01-15T00:00:00.000Z"
+      "createdAt": "2024-01-15T00:00:00.000Z",
+      "isActive": true,
+      "updatedAt": "2026-02-13T14:46:58.779Z"
     },
     {
       "id": 3,
@@ -49,7 +53,9 @@
       "role": "manager",
       "phone": "+221 77 123 45 67",
       "hangar": "Hangar 1",
-      "createdAt": "2024-01-15T10:00:00.000Z"
+      "createdAt": "2024-01-15T10:00:00.000Z",
+      "isActive": true,
+      "updatedAt": "2026-02-12T21:10:09.579Z"
     },
     {
       "id": 7,
@@ -58,7 +64,9 @@
       "role": "manager",
       "phone": "+221 76 234 56 78",
       "hangar": "Hangar 2",
-      "createdAt": "2024-01-20T10:00:00.000Z"
+      "createdAt": "2024-01-20T10:00:00.000Z",
+      "isActive": true,
+      "updatedAt": "2026-02-12T21:10:10.484Z"
     },
     {
       "id": 8,
@@ -67,7 +75,9 @@
       "role": "manager",
       "phone": "+221 70 345 67 89",
       "hangar": "Hangar 3",
-      "createdAt": "2024-02-01T10:00:00.000Z"
+      "createdAt": "2024-02-01T10:00:00.000Z",
+      "isActive": true,
+      "updatedAt": "2026-02-12T21:10:11.368Z"
     },
     {
       "id": 9,
@@ -78,7 +88,7 @@
       "hangar": "Hangar 1",
       "createdAt": "2024-02-10T10:00:00.000Z",
       "isActive": true,
-      "updatedAt": "2026-02-11T15:31:38.557Z"
+      "updatedAt": "2026-02-14T16:27:26.609Z"
     },
     {
       "id": 1770923257110,
@@ -96,11 +106,32 @@
   "otpCodes": [],
   "sessions": [
     {
-      "token": "zJLzbhRBdjdaXOYsk4YJxuphCoAjIE3yYyeJqOF4CG5Pjf12JQJ8gXVYU3bAoMSy",
+      "token": "aWwZ5QIzzkh92YPMf0rqqNBeC4qfcn89FraMcjUhUajkiJLDgcv4ae5CW6VDECgn",
+      "userId": 1,
+      "email": "admin@sodipas.sn",
+      "createdAt": "2026-02-12T21:48:39.458Z",
+      "expiresAt": "2026-02-13T21:48:39.458Z"
+    },
+    {
+      "token": "zqkBXUQFXozSWlTiY6ynlJvMUuzPMQy7XbIVmNOce51280jXLzkLQtSV2dZsCvxj",
+      "userId": 1,
+      "email": "admin@sodipas.sn",
+      "createdAt": "2026-02-13T12:54:35.681Z",
+      "expiresAt": "2026-02-14T12:54:35.681Z"
+    },
+    {
+      "token": "cdskN0y5Uw4x6Dsnc7cBfZhQ1wQwtfbz916NxmiN9xsmfIbQiPwRgzqA39LPoRxW",
       "userId": 9,
       "email": "mariama.diallo@sodipas.sn",
-      "createdAt": "2026-02-12T19:14:26.098Z",
-      "expiresAt": "2026-02-13T19:14:26.098Z"
+      "createdAt": "2026-02-14T08:52:38.773Z",
+      "expiresAt": "2026-02-15T08:52:38.773Z"
+    },
+    {
+      "token": "TttpzoTKd8uDY8rbYerPMICwO3PWwCIYavLNiYUZBTxZw02KNcU9e2WFTatjdupb",
+      "userId": 9,
+      "email": "mariama.diallo@sodipas.sn",
+      "createdAt": "2026-02-14T16:31:35.492Z",
+      "expiresAt": "2026-02-15T16:31:35.492Z"
     }
   ],
   "clients": [
@@ -229,100 +260,310 @@
   ],
   "trucks": [
     {
-      "id": "1",
-      "origin": "Daloa",
-      "driver": "Kouassi Jean",
-      "phone": "+225 07 88 12 34",
-      "articles": "Bananes plantain, Mangues",
+      "id": "TRK-001",
+      "origin": "Dakar",
+      "driver": "Moussa Diop",
+      "phone": "+221 77 123 45 67",
+      "articles": [
+        "Bananes plantain",
+        "Mangues"
+      ],
       "value": 2500000,
+      "hangar": "Hangar 1",
       "status": "arrived",
-      "date": "2024-01-15"
+      "observations": "Camion en bon état",
+      "registeredBy": "Ibrahim Bamba",
+      "registeredAt": "2024-01-15T08:00:00.000Z",
+      "arrivedAt": "2024-01-15T10:30:00.000Z",
+      "unloadedAt": null
     },
     {
-      "id": "2",
-      "origin": "Man",
-      "driver": "Yao Michel",
-      "phone": "+225 05 67 89 01",
-      "articles": "Ananas, Papayes",
+      "id": "TRK-002",
+      "origin": "Thiès",
+      "driver": "Aminata Sall",
+      "phone": "+221 76 234 56 78",
+      "articles": [
+        "Ananas",
+        "Papayes"
+      ],
       "value": 1800000,
-      "status": "en_route",
-      "date": "2024-01-15"
+      "hangar": "Hangar 2",
+      "status": "registered",
+      "observations": "En attente d'arrivée",
+      "registeredBy": "Cheikh Ndiaye",
+      "registeredAt": "2024-01-15T09:00:00.000Z",
+      "arrivedAt": null,
+      "unloadedAt": null
     },
     {
-      "id": "3",
-      "origin": "Bouaké",
-      "driver": "Koné Ibrahim",
-      "phone": "+225 01 23 45 67",
-      "articles": "Bananes douces, Oranges",
+      "id": "TRK-003",
+      "origin": "Saint-Louis",
+      "driver": "Youssoupha Koné",
+      "phone": "+221 70 345 67 89",
+      "articles": [
+        "Bananes douces",
+        "Oranges"
+      ],
       "value": 3200000,
+      "hangar": "Hangar 1",
       "status": "unloaded",
-      "date": "2024-01-14"
+      "observations": "Déchargement terminé",
+      "registeredBy": "Ibrahim Bamba",
+      "registeredAt": "2024-01-14T07:00:00.000Z",
+      "arrivedAt": "2024-01-14T08:00:00.000Z",
+      "unloadedAt": "2024-01-14T12:00:00.000Z",
+      "unloadedBy": "Mariama Diallo"
     },
     {
-      "id": "4",
-      "origin": "San Pedro",
-      "driver": "Bamba Moussa",
-      "phone": "+225 07 11 22 33",
-      "articles": "Noix de coco, Avocats",
+      "id": "TRK-004",
+      "origin": "Mbour",
+      "driver": "Ousmane Bamba",
+      "phone": "+221 77 456 78 90",
+      "articles": [
+        "Noix de coco",
+        "Avocats",
+        "Citrons"
+      ],
       "value": 1500000,
+      "hangar": "Hangar 3",
+      "status": "unloading",
+      "observations": "Déchargement en cours",
+      "registeredBy": "Mamadou Diop",
+      "registeredAt": "2024-01-15T06:00:00.000Z",
+      "arrivedAt": "2024-01-15T07:30:00.000Z",
+      "unloadedAt": null
+    },
+    {
+      "id": "TRK-005",
+      "origin": "Kaolack",
+      "driver": "Fatou Traoré",
+      "phone": "+221 75 567 89 01",
+      "articles": [
+        "Mangues",
+        "Bananes plantain"
+      ],
+      "value": 2800000,
+      "hangar": "Hangar 2",
       "status": "arrived",
-      "date": "2024-01-14"
+      "observations": "Camion arrivé à l'heure",
+      "registeredBy": "Aminata Sall",
+      "registeredAt": "2024-01-15T05:00:00.000Z",
+      "arrivedAt": "2024-01-15T09:00:00.000Z",
+      "unloadedAt": null
+    },
+    {
+      "id": "TRK-1770986757997",
+      "origin": "Dakar",
+      "driver": "Test Driver",
+      "phone": "+221 77 123 45 67",
+      "articles": [
+        "Test Article"
+      ],
+      "value": 1000,
+      "hangar": "Hangar 1",
+      "status": "registered",
+      "observations": "",
+      "registeredBy": "undefined undefined",
+      "registeredAt": "2026-02-13T12:45:57.997Z",
+      "arrivedAt": null,
+      "unloadedAt": null
+    },
+    {
+      "id": "TRK-1770987115531",
+      "origin": "Thiès",
+      "driver": "Test Driver 2",
+      "phone": "+221 77 123 45 67",
+      "articles": [
+        "Mangues"
+      ],
+      "value": 2000,
+      "hangar": "Hangar 2",
+      "status": "registered",
+      "observations": "",
+      "registeredBy": "undefined undefined",
+      "registeredAt": "2026-02-13T12:51:55.531Z",
+      "arrivedAt": null,
+      "unloadedAt": null
+    },
+    {
+      "id": "TRK-1770987931471",
+      "origin": "Thiès",
+      "driver": "segnane",
+      "phone": "777732762",
+      "articles": [
+        {
+          "name": "Mandarines",
+          "quantity": 8,
+          "unit": "cageots",
+          "unitPrice": 789756466,
+          "totalValue": 6318051728
+        }
+      ],
+      "value": 6318051728,
+      "hangar": "Hangar 3",
+      "status": "registered",
+      "observations": "",
+      "registeredBy": "undefined undefined",
+      "registeredAt": "2026-02-13T13:05:31.471Z",
+      "arrivedAt": null,
+      "unloadedAt": null
     }
   ],
   "stocks": [
     {
-      "id": "1",
+      "id": "STK-001",
       "name": "Bananes plantain",
-      "hangar": "Hangar 1",
       "quantity": 850,
       "unit": "cageots",
-      "threshold": 200,
-      "value": 4250000
-    },
-    {
-      "id": "2",
-      "name": "Bananes douces",
+      "unitPrice": 5000,
+      "totalValue": 4250000,
       "hangar": "Hangar 1",
-      "quantity": 120,
-      "unit": "cageots",
-      "threshold": 150,
-      "value": 600000
+      "origin": "Dakar",
+      "truckId": "TRK-001",
+      "driver": "Moussa Diop",
+      "createdAt": "2024-01-15T08:00:00.000Z",
+      "updatedAt": "2024-01-15T10:30:00.000Z"
     },
     {
-      "id": "3",
+      "id": "STK-002",
       "name": "Mangues",
-      "hangar": "Hangar 2",
-      "quantity": 45,
-      "unit": "cageots",
-      "threshold": 100,
-      "value": 225000
-    },
-    {
-      "id": "4",
-      "name": "Ananas",
-      "hangar": "Hangar 2",
       "quantity": 320,
       "unit": "cageots",
-      "threshold": 80,
-      "value": 1600000
+      "unitPrice": 4500,
+      "totalValue": 1440000,
+      "hangar": "Hangar 1",
+      "origin": "Dakar",
+      "truckId": "TRK-001",
+      "driver": "Moussa Diop",
+      "createdAt": "2024-01-15T08:00:00.000Z",
+      "updatedAt": "2024-01-15T10:30:00.000Z"
     },
     {
-      "id": "5",
-      "name": "Papayes",
-      "hangar": "Hangar 3",
-      "quantity": 180,
+      "id": "STK-003",
+      "name": "Bananes douces",
+      "quantity": 120,
       "unit": "cageots",
-      "threshold": 60,
-      "value": 900000
+      "unitPrice": 5000,
+      "totalValue": 600000,
+      "hangar": "Hangar 1",
+      "origin": "Saint-Louis",
+      "truckId": "TRK-003",
+      "driver": "Youssoupha Koné",
+      "createdAt": "2024-01-14T07:00:00.000Z",
+      "updatedAt": "2024-01-14T12:00:00.000Z"
     },
     {
-      "id": "6",
+      "id": "STK-004",
       "name": "Oranges",
-      "hangar": "Hangar 3",
       "quantity": 420,
       "unit": "cageots",
-      "threshold": 100,
-      "value": 2100000
+      "unitPrice": 5000,
+      "totalValue": 2100000,
+      "hangar": "Hangar 1",
+      "origin": "Saint-Louis",
+      "truckId": "TRK-003",
+      "driver": "Youssoupha Koné",
+      "createdAt": "2024-01-14T07:00:00.000Z",
+      "updatedAt": "2024-01-14T12:00:00.000Z"
+    },
+    {
+      "id": "STK-005",
+      "name": "Ananas",
+      "quantity": 280,
+      "unit": "cageots",
+      "unitPrice": 4500,
+      "totalValue": 1260000,
+      "hangar": "Hangar 2",
+      "origin": "Thiès",
+      "truckId": "TRK-002",
+      "driver": "Aminata Sall",
+      "createdAt": "2024-01-15T09:00:00.000Z",
+      "updatedAt": "2024-01-15T09:00:00.000Z"
+    },
+    {
+      "id": "STK-006",
+      "name": "Papayes",
+      "quantity": 180,
+      "unit": "cageots",
+      "unitPrice": 5000,
+      "totalValue": 900000,
+      "hangar": "Hangar 2",
+      "origin": "Thiès",
+      "truckId": "TRK-002",
+      "driver": "Aminata Sall",
+      "createdAt": "2024-01-15T09:00:00.000Z",
+      "updatedAt": "2024-01-15T09:00:00.000Z"
+    },
+    {
+      "id": "STK-007",
+      "name": "Mangues",
+      "quantity": 450,
+      "unit": "cageots",
+      "unitPrice": 4500,
+      "totalValue": 2025000,
+      "hangar": "Hangar 2",
+      "origin": "Kaolack",
+      "truckId": "TRK-005",
+      "driver": "Fatou Traoré",
+      "createdAt": "2024-01-15T05:00:00.000Z",
+      "updatedAt": "2024-01-15T09:00:00.000Z"
+    },
+    {
+      "id": "STK-008",
+      "name": "Noix de coco",
+      "quantity": 200,
+      "unit": "units",
+      "unitPrice": 3000,
+      "totalValue": 600000,
+      "hangar": "Hangar 3",
+      "origin": "Mbour",
+      "truckId": "TRK-004",
+      "driver": "Ousmane Bamba",
+      "createdAt": "2024-01-15T06:00:00.000Z",
+      "updatedAt": "2024-01-15T07:30:00.000Z"
+    },
+    {
+      "id": "STK-009",
+      "name": "Avocats",
+      "quantity": 150,
+      "unit": "cageots",
+      "unitPrice": 6000,
+      "totalValue": 900000,
+      "hangar": "Hangar 3",
+      "origin": "Mbour",
+      "truckId": "TRK-004",
+      "driver": "Ousmane Bamba",
+      "createdAt": "2024-01-15T06:00:00.000Z",
+      "updatedAt": "2024-01-15T07:30:00.000Z"
+    },
+    {
+      "id": "STK-010",
+      "name": "Citrons",
+      "quantity": 80,
+      "unit": "cageots",
+      "unitPrice": 4000,
+      "totalValue": 320000,
+      "hangar": "Hangar 3",
+      "origin": "Mbour",
+      "truckId": "TRK-004",
+      "driver": "Ousmane Bamba",
+      "createdAt": "2024-01-15T06:00:00.000Z",
+      "updatedAt": "2024-01-15T07:30:00.000Z"
+    },
+    {
+      "id": "STK-1770987931471-oy28x7ng3",
+      "name": "Mandarines",
+      "quantity": 8,
+      "unit": "cageots",
+      "unitPrice": 789756466,
+      "totalValue": 6318051728,
+      "hangar": "Hangar 3",
+      "origin": "Thiès",
+      "truckId": "TRK-1770987931471",
+      "driver": "segnane",
+      "createdAt": "2026-02-13T13:05:31.471Z",
+      "updatedAt": "2026-02-13T13:05:31.471Z",
+      "lastTruckId": "TRK-1770987931471"
     }
   ],
   "managers": [],
@@ -367,6 +608,30 @@
       "message": "thierno segnane (cashier) a été créé",
       "read": true,
       "createdAt": "2026-02-12T19:07:37.110Z"
+    },
+    {
+      "id": "1770986758038",
+      "type": "truck_registered",
+      "title": "Nouveau camion enregistré",
+      "message": "Test Driver (Dakar) - Affecté au Hangar 1",
+      "read": true,
+      "createdAt": "2026-02-13T12:45:58.038Z"
+    },
+    {
+      "id": "1770987115532",
+      "type": "truck_registered",
+      "title": "Nouveau camion enregistré",
+      "message": "Test Driver 2 (Thiès) - Affecté au Hangar 2",
+      "read": true,
+      "createdAt": "2026-02-13T12:51:55.532Z"
+    },
+    {
+      "id": "1770987931510",
+      "type": "truck_registered",
+      "title": "Nouveau camion enregistré",
+      "message": "segnane (Thiès) - Affecté au Hangar 3",
+      "read": true,
+      "createdAt": "2026-02-13T13:05:31.510Z"
     }
   ],
   "auditLogs": [
@@ -417,6 +682,118 @@
       "action": "DELETE_USER",
       "details": "Suppression de l'utilisateur Babacar Sow",
       "timestamp": "2026-02-12T19:07:46.435Z"
+    },
+    {
+      "id": "1770930607174",
+      "userId": 1,
+      "userName": "Administrateur SODIPAS",
+      "action": "UPDATE_USER",
+      "details": "Mise à jour de l'utilisateur undefined undefined",
+      "timestamp": "2026-02-12T21:10:07.174Z"
+    },
+    {
+      "id": "1770930608502",
+      "userId": 1,
+      "userName": "Administrateur SODIPAS",
+      "action": "UPDATE_USER",
+      "details": "Mise à jour de l'utilisateur undefined undefined",
+      "timestamp": "2026-02-12T21:10:08.502Z"
+    },
+    {
+      "id": "1770930609579",
+      "userId": 1,
+      "userName": "Administrateur SODIPAS",
+      "action": "UPDATE_USER",
+      "details": "Mise à jour de l'utilisateur undefined undefined",
+      "timestamp": "2026-02-12T21:10:09.579Z"
+    },
+    {
+      "id": "1770930610484",
+      "userId": 1,
+      "userName": "Administrateur SODIPAS",
+      "action": "UPDATE_USER",
+      "details": "Mise à jour de l'utilisateur undefined undefined",
+      "timestamp": "2026-02-12T21:10:10.484Z"
+    },
+    {
+      "id": "1770930611368",
+      "userId": 1,
+      "userName": "Administrateur SODIPAS",
+      "action": "UPDATE_USER",
+      "details": "Mise à jour de l'utilisateur undefined undefined",
+      "timestamp": "2026-02-12T21:10:11.368Z"
+    },
+    {
+      "id": "1770986758038",
+      "userId": 1,
+      "userName": "undefined undefined",
+      "action": "TRUCK_REGISTERED",
+      "details": "Enregistrement du camion Test Driver (Dakar) au Hangar 1",
+      "timestamp": "2026-02-13T12:45:58.038Z"
+    },
+    {
+      "id": "1770987115532",
+      "userId": 1,
+      "userName": "undefined undefined",
+      "action": "TRUCK_REGISTERED",
+      "details": "Enregistrement du camion Test Driver 2 (Thiès) au Hangar 2",
+      "timestamp": "2026-02-13T12:51:55.532Z"
+    },
+    {
+      "id": "1770987931510",
+      "userId": 1,
+      "userName": "undefined undefined",
+      "action": "TRUCK_REGISTERED",
+      "details": "Enregistrement du camion segnane (Thiès) au Hangar 3",
+      "timestamp": "2026-02-13T13:05:31.510Z"
+    },
+    {
+      "id": "1770994014129",
+      "userId": 1,
+      "userName": "Administrateur SODIPAS",
+      "action": "UPDATE_USER",
+      "details": "Mise à jour de l'utilisateur undefined undefined",
+      "timestamp": "2026-02-13T14:46:54.129Z"
+    },
+    {
+      "id": "1770994014836",
+      "userId": 1,
+      "userName": "Administrateur SODIPAS",
+      "action": "UPDATE_USER",
+      "details": "Mise à jour de l'utilisateur undefined undefined",
+      "timestamp": "2026-02-13T14:46:54.836Z"
+    },
+    {
+      "id": "1770994018352",
+      "userId": 1,
+      "userName": "Administrateur SODIPAS",
+      "action": "UPDATE_USER",
+      "details": "Mise à jour de l'utilisateur undefined undefined",
+      "timestamp": "2026-02-13T14:46:58.352Z"
+    },
+    {
+      "id": "1770994018779",
+      "userId": 1,
+      "userName": "Administrateur SODIPAS",
+      "action": "UPDATE_USER",
+      "details": "Mise à jour de l'utilisateur undefined undefined",
+      "timestamp": "2026-02-13T14:46:58.779Z"
+    },
+    {
+      "id": "1771086443489",
+      "userId": 1,
+      "userName": "Administrateur SODIPAS",
+      "action": "UPDATE_USER",
+      "details": "Mise à jour de l'utilisateur undefined undefined",
+      "timestamp": "2026-02-14T16:27:23.489Z"
+    },
+    {
+      "id": "1771086446609",
+      "userId": 1,
+      "userName": "Administrateur SODIPAS",
+      "action": "UPDATE_USER",
+      "details": "Mise à jour de l'utilisateur undefined undefined",
+      "timestamp": "2026-02-14T16:27:26.609Z"
     }
   ]
 }

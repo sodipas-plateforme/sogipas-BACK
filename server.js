@@ -787,6 +787,356 @@ app.get('/hangars', (req, res) => {
   res.json(['Hangar 1', 'Hangar 2', 'Hangar 3']);
 });
 
+// GET /stocks - Get all stocks (filtered by user role)
+app.get('/stocks', (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: "Non authentifié" });
+  }
+  
+  const token = authHeader.substring(7);
+  const db = getDb();
+  const session = db.sessions.find(s => s.token === token);
+  
+  if (!session) {
+    return res.status(401).json({ success: false, message: "Session invalide" });
+  }
+  
+  const user = db.users.find(u => u.id === session.userId);
+  if (!user) {
+    return res.status(401).json({ success: false, message: "Utilisateur non trouvé" });
+  }
+  
+  const stocks = db.stocks || [];
+  
+  // Filter by hangar for non-admin users
+  let filteredStocks = stocks;
+  if (user.role !== 'admin' && user.hangar) {
+    filteredStocks = stocks.filter(s => s.hangar === user.hangar);
+  }
+  
+  res.json({ success: true, stocks: filteredStocks });
+});
+
+// ============================================
+// TRUCK REGISTRATION ROUTES
+// ============================================
+
+// GET /trucks - Get all trucks (filtered by user role)
+app.get('/trucks', (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: "Non authentifié" });
+  }
+  
+  const token = authHeader.substring(7);
+  const db = getDb();
+  const session = db.sessions.find(s => s.token === token);
+  
+  if (!session) {
+    return res.status(401).json({ success: false, message: "Session invalide" });
+  }
+  
+  const user = db.users.find(u => u.id === session.userId);
+  if (!user) {
+    return res.status(401).json({ success: false, message: "Utilisateur non trouvé" });
+  }
+  
+  const trucks = db.trucks || [];
+  
+  // Filter by hangar for non-admin users
+  let filteredTrucks = trucks;
+  if (user.role !== 'admin' && user.hangar) {
+    filteredTrucks = trucks.filter(t => t.hangar === user.hangar);
+  }
+  
+  res.json(filteredTrucks);
+});
+
+// GET /trucks/:id - Get single truck
+app.get('/trucks/:id', (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: "Non authentifié" });
+  }
+  
+  const token = authHeader.substring(7);
+  const db = getDb();
+  const session = db.sessions.find(s => s.token === token);
+  
+  if (!session) {
+    return res.status(401).json({ success: false, message: "Session invalide" });
+  }
+  
+  const user = db.users.find(u => u.id === session.userId);
+  const trucks = db.trucks || [];
+  const truck = trucks.find(t => t.id === req.params.id);
+  
+  if (!truck) {
+    return res.status(404).json({ success: false, message: "Camion non trouvé" });
+  }
+  
+  res.json(truck);
+});
+
+// POST /trucks - Register a new truck
+app.post('/trucks', (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: "Non authentifié" });
+  }
+  
+  const token = authHeader.substring(7);
+  const db = getDb();
+  const session = db.sessions.find(s => s.token === token);
+  
+  if (!session) {
+    return res.status(401).json({ success: false, message: "Session invalide" });
+  }
+  
+  const user = db.users.find(u => u.id === session.userId);
+  if (!user || (user.role !== 'admin' && user.role !== 'manager')) {
+    return res.status(403).json({ success: false, message: "Accès refusé" });
+  }
+  
+  const { origin, driver, phone, articles, value, hangar, observations } = req.body;
+  
+  if (!origin || !driver || !phone || !articles || !hangar) {
+    return res.status(400).json({ 
+      success: false, 
+      message: "Les champs requis: origine, chauffeur, téléphone, articles, hangar" 
+    });
+  }
+  
+  const newTruck = {
+    id: `TRK-${Date.now()}`,
+    origin,
+    driver,
+    phone,
+    articles: Array.isArray(articles) ? articles : [articles],
+    value: value || 0,
+    hangar,
+    status: 'registered',
+    observations: observations || '',
+    registeredBy: user.name,
+    registeredAt: new Date().toISOString(),
+    arrivedAt: null,
+    unloadedAt: null
+  };
+  
+  if (!db.trucks) db.trucks = [];
+  db.trucks.push(newTruck);
+  
+  // Add articles to stock
+  if (articles && Array.isArray(articles) && articles.length > 0) {
+    if (!db.stocks) db.stocks = [];
+    
+    articles.forEach(article => {
+      if (article.name && article.quantity > 0) {
+        // Check if article already exists in stock for this hangar
+        const existingStock = db.stocks.find(
+          s => s.name === article.name && s.hangar === hangar
+        );
+        
+        if (existingStock) {
+          // Update existing stock
+          existingStock.quantity += article.quantity;
+          existingStock.totalValue += (article.unitPrice * article.quantity);
+          existingStock.updatedAt = new Date().toISOString();
+          existingStock.lastTruckId = newTruck.id;
+        } else {
+          // Create new stock entry
+          const newStock = {
+            id: `STK-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            name: article.name,
+            quantity: article.quantity,
+            unit: article.unit || 'cageots',
+            unitPrice: article.unitPrice || 0,
+            totalValue: (article.unitPrice || 0) * article.quantity,
+            hangar,
+            origin: newTruck.origin,
+            truckId: newTruck.id,
+            driver: newTruck.driver,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            lastTruckId: newTruck.id
+          };
+          db.stocks.push(newStock);
+        }
+      }
+    });
+    
+    console.log(`\n📦 === ARTICLES AJOUTÉS AU STOCK ===\n`);
+    console.log(`Camion: ${driver} (${origin})`);
+    console.log(`Hangar: ${hangar}`);
+    console.log(`Articles: ${articles.length}`);
+    articles.forEach(a => {
+      console.log(`  - ${a.name}: ${a.quantity} ${a.unit} @ ${a.unitPrice} F = ${(a.unitPrice * a.quantity).toLocaleString()} F`);
+    });
+    console.log(`================================\n`);
+  }
+  
+  // Notify admin
+  notifyAdmin(db, 'truck_registered', 'Nouveau camion enregistré', `${driver} (${origin}) - Affecté au ${hangar}`);
+  
+  // Add audit log
+  const auditLog = {
+    id: Date.now().toString(),
+    userId: user.id,
+    userName: user.name,
+    action: 'TRUCK_REGISTERED',
+    details: `Enregistrement du camion ${driver} (${origin}) au ${hangar}`,
+    timestamp: new Date().toISOString()
+  };
+  db.auditLogs.push(auditLog);
+  
+  saveDb(db);
+  
+  res.status(201).json({ success: true, truck: newTruck });
+});
+
+// PUT /trucks/:id/status - Update truck status (arrived, unloading, unloaded)
+app.put('/trucks/:id/status', (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: "Non authentifié" });
+  }
+  
+  const token = authHeader.substring(7);
+  const db = getDb();
+  const session = db.sessions.find(s => s.token === token);
+  
+  if (!session) {
+    return res.status(401).json({ success: false, message: "Session invalide" });
+  }
+  
+  const user = db.users.find(u => u.id === session.userId);
+  if (!user || (user.role !== 'admin' && user.role !== 'manager')) {
+    return res.status(403).json({ success: false, message: "Accès refusé" });
+  }
+  
+  const trucks = db.trucks || [];
+  const truckIndex = trucks.findIndex(t => t.id === req.params.id);
+  
+  if (truckIndex === -1) {
+    return res.status(404).json({ success: false, message: "Camion non trouvé" });
+  }
+  
+  const { status } = req.body;
+  const validStatuses = ['registered', 'arrived', 'unloading', 'unloaded'];
+  
+  if (!validStatuses.includes(status)) {
+    return res.status(400).json({ success: false, message: "Statut invalide" });
+  }
+  
+  trucks[truckIndex].status = status;
+  
+  if (status === 'arrived') {
+    trucks[truckIndex].arrivedAt = new Date().toISOString();
+  } else if (status === 'unloaded') {
+    trucks[truckIndex].unloadedAt = new Date().toISOString();
+  }
+  
+  db.trucks = trucks;
+  
+  // Notify admin
+  notifyAdmin(db, 'truck_status', 'Statut camion mis à jour', `${trucks[truckIndex].driver} - Statut: ${status}`);
+  
+  saveDb(db);
+  
+  res.json({ success: true, truck: trucks[truckIndex] });
+});
+
+// POST /trucks/:id/unload - Unload truck and update stock
+app.post('/trucks/:id/unload', (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: "Non authentifié" });
+  }
+  
+  const token = authHeader.substring(7);
+  const db = getDb();
+  const session = db.sessions.find(s => s.token === token);
+  
+  if (!session) {
+    return res.status(401).json({ success: false, message: "Session invalide" });
+  }
+  
+  const user = db.users.find(u => u.id === session.userId);
+  if (!user || (user.role !== 'admin' && user.role !== 'manager')) {
+    return res.status(403).json({ success: false, message: "Accès refusé" });
+  }
+  
+  const trucks = db.trucks || [];
+  const stocks = db.stocks || [];
+  const truckIndex = trucks.findIndex(t => t.id === req.params.id);
+  
+  if (truckIndex === -1) {
+    return res.status(404).json({ success: false, message: "Camion non trouvé" });
+  }
+  
+  const truck = trucks[truckIndex];
+  const { items } = req.body; // Array of { name, quantity, unit }
+  
+  if (!items || !Array.isArray(items)) {
+    return res.status(400).json({ success: false, message: "Articles requis" });
+  }
+  
+  // Update truck status
+  trucks[truckIndex].status = 'unloaded';
+  trucks[truckIndex].unloadedAt = new Date().toISOString();
+  trucks[truckIndex].unloadedBy = user.name;
+  
+  // Update or create stock items
+  const stockUpdates = [];
+  items.forEach(item => {
+    const existingStock = stocks.find(s => s.name === item.name && s.hangar === truck.hangar);
+    
+    if (existingStock) {
+      existingStock.quantity += item.quantity;
+      existingStock.value = existingStock.quantity * (existingStock.value / (existingStock.quantity - item.quantity));
+      stockUpdates.push({ ...existingStock, action: 'updated' });
+    } else {
+      const newStockItem = {
+        id: `STK-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        name: item.name,
+        hangar: truck.hangar,
+        quantity: item.quantity,
+        unit: item.unit || 'cageots',
+        threshold: 50,
+        value: item.value || (item.quantity * 5000)
+      };
+      stocks.push(newStockItem);
+      stockUpdates.push({ ...newStockItem, action: 'created' });
+    }
+  });
+  
+  db.trucks = trucks;
+  db.stocks = stocks;
+  
+  // Notify admin
+  notifyAdmin(db, 'truck_unloaded', 'Camion déchargé', `${truck.driver} déchargé au ${truck.hangar} - ${items.length} article(s)`);
+  
+  // Add audit log
+  const auditLog = {
+    id: Date.now().toString(),
+    userId: user.id,
+    userName: user.name,
+    action: 'TRUCK_UNLOADED',
+    details: `Déchargement du camion ${truck.driver} (${truck.origin}) au ${truck.hangar}`,
+    timestamp: new Date().toISOString()
+  };
+  db.auditLogs.push(auditLog);
+  
+  saveDb(db);
+  
+  res.json({ 
+    success: true, 
+    truck: trucks[truckIndex], 
+    stockUpdates 
+  });
+});
+
 // GET /auth/me - Get current user
 app.get('/auth/me', (req, res) => {
   const authHeader = req.headers.authorization;
